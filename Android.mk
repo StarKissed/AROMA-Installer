@@ -1,19 +1,6 @@
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
-  ## Check for ARM NEON
-  AROMA_ARM_NEON      := false
-  ifeq ($(ARCH_ARM_HAVE_NEON),true)
-    AROMA_ARM_NEON    := true
-  endif
-  
-  ##
-  ## Force Compiling Without ARM NEON
-  ##   -- Uncomment This Line --
-  ##
-  # AROMA_ARM_NEON      := false
-  #
-  
   ##
   ## VERSIONING
   ##
@@ -35,7 +22,7 @@ include $(CLEAR_VARS)
     libs/zlib/inftrees.c \
     libs/zlib/zutil.c
   ## ZLIB NEON SOURCE
-  ifeq ($(AROMA_ARM_NEON),true)
+  ifeq ($(ARCH_ARM_HAVE_NEON),true)
     LOCAL_SRC_FILES += libs/zlib/inflate_fast_copy_neon.s
   endif
   
@@ -55,7 +42,7 @@ include $(CLEAR_VARS)
     libs/png/pngtrans.c \
     libs/png/pngvcrd.c
   ## PNG NEON SOURCE
-  ifeq ($(AROMA_ARM_NEON),true)
+  ifeq ($(ARCH_ARM_HAVE_NEON),true)
     LOCAL_SRC_FILES += libs/png/png_read_filter_row_neon.s
   endif
     
@@ -151,7 +138,7 @@ include $(CLEAR_VARS)
   LOCAL_CFLAGS += -DAROMA_BUILD="\"$(AROMA_BUILD)\""
   LOCAL_CFLAGS += -DAROMA_BUILD_CN="\"$(AROMA_CN)\""
   
-  ifeq ($(AROMA_ARM_NEON),true)
+  ifeq ($(ARCH_ARM_HAVE_NEON),true)
     LOCAL_CFLAGS                  += -mfloat-abi=softfp -mfpu=neon -D__ARM_HAVE_NEON
   endif
   
@@ -163,7 +150,7 @@ include $(CLEAR_VARS)
   endif
   
   ##
-  ## Remove Old Build
+  ## Clean Old Build
   ##
   ifeq ($(MAKECMDGOALS),$(LOCAL_MODULE))
     $(shell rm -rf $(PRODUCT_OUT)/obj/EXECUTABLES/$(LOCAL_MODULE)_intermediates)
@@ -181,11 +168,10 @@ ifeq ($(MAKECMDGOALS),aroma_installer.zip)
   $(info MAKING AROMA Installer ZIP)
   OUTPUT_SH := $(shell $(AROMA_INSTALLER_LOCALPATH)/tools/android_building.sh)
   ifeq ($(OUTPUT_SH),0)
-    $(info Please Compile AROMA Installer First, by running: make -j4 aroma_installer)
+    $(info Please Compile AROMA Installer First, by running: make aroma_installer)
   else
     $(info AROMA ZIP is On $(AROMA_INSTALLER_LOCALPATH)/out/aroma.zip)
   endif
   $(info )
   $(info ==========================================================================)
 endif
-
