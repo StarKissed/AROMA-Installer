@@ -166,7 +166,7 @@ ifeq ($(MAKECMDGOALS),aroma_installer.zip)
   $(info ==========================================================================)
   $(info )
   $(info MAKING AROMA Installer ZIP)
-  OUTPUT_SH := $(shell $(AROMA_INSTALLER_LOCALPATH)/tools/android_building.sh)
+  OUTPUT_SH := $(shell $(AROMA_INSTALLER_LOCALPATH)/tools/android_building.sh $(AROMA_INSTALLER_LOCALPATH))
   ifeq ($(OUTPUT_SH),0)
     $(info Please Compile AROMA Installer First, by running: make aroma_installer)
   else
